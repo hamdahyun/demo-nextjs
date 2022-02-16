@@ -1,29 +1,32 @@
 import type { NextPage } from "next";
-
-import React, { useEffect, useState } from "react";
-import axios from 'axios';
+import { wrapper } from "@/store/store";
+import { useAppSelector } from "@/hook/hook";
+import { getItems, selectItem } from "@/features/item/itemSlice";
+import { Box } from "@chakra-ui/react";
+import { ItemGrid } from "@/features/item/itemGrid";
+import { ItemCard } from "@/features/item/itemCard";
+import { mapItem } from "@/entities/item";
 
 const Home: NextPage = () => {
-  const API_URL = "http://localhost:3065/api";
-  const itemId = '10';
-
-  function getData(itemId) {
-    console.log(API_URL+`/item/${itemId}`)
-    axios.get(API_URL+`/item/${itemId}`).then( res => {
-      console.log(res.data);
-      // setlist(res.data)
-    })
-  }
-  useEffect(()=> {
-    getData(itemId);
-  }, [itemId]);
+	const { itemList } = useAppSelector(selectItem);
 
 	return (
-		<div>
-     
-			{/* <Counter /> */}
-		</div>
+		<Box>
+			<ItemGrid>
+				{itemList?.map(mapItem).map((item) => (
+					<ItemCard key={item.itemId} item={item} />
+				))}
+			</ItemGrid>
+		</Box>
 	);
 };
+
+export const getStaticProps = wrapper.getStaticProps((store) => async () => {
+	await store.dispatch(getItems());
+
+	return {
+		props: {},
+	};
+});
 
 export default Home;

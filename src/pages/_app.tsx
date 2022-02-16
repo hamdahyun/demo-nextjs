@@ -1,10 +1,14 @@
-import "../styles/globals.css";
+import { ChakraProvider } from "@chakra-ui/react";
 
-import type { AppProps } from 'next/app'
+import type { AppProps } from "next/app";
 import { wrapper } from "@/store/store";
 
 function MyApp({ Component, pageProps }: AppProps) {
-	return <Component {...pageProps} />;
+	return (
+		<ChakraProvider>
+			<Component {...pageProps} />
+		</ChakraProvider>
+	);
 }
 
 export default wrapper.withRedux(MyApp);
